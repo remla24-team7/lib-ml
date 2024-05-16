@@ -1,9 +1,10 @@
 [project]
-name = "lib_ml_mellekoper"
-version = "0.0.2"
+name = "lib_ml_remla24_7"
+version = "0.0.1"
 authors = [
   { name="Melle Koper", email="melle.koper@gmail.com" },
 ]
+packages = [{include="lib_ml_remla", from="src"}]
 description = "A small preprocessing package"
 readme = "README.md"
 requires-python = ">=3.8"
