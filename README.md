@@ -3,5 +3,8 @@ Data preprocessing library
 can be installed through:
 
 ```
-pip install remla24-team7-libversion
+pip install lib-ml-mellekoper
+
+
+from lib_ml_remla import Preprocess
 ```

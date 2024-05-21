@@ -1,5 +1,5 @@
 [project]
-name = "lib_ml_mellekoper"
+name = "lib-ml-mellekoper"
 version = "0.0.2"
 authors = [
   { name="Melle Koper", email="melle.koper@gmail.com" },
