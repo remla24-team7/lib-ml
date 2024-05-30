@@ -1,11 +1,11 @@
-name: Release
+name: Pre-release
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  release:
+  prerelease:
     runs-on: ubuntu-latest
 
     permissions:
