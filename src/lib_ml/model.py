@@ -16,5 +16,4 @@ class Model:
     def predict(self, texts):
         preprocessed = self.preprocess(texts)
         predictions = self.model.predict(preprocessed)
-        # labels = self.encoder.inverse_transform(predictions)
-        return None
+        return self.encoder.inverse_transform(predictions.round().astype(int))
