@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  release:
+  Release:
     runs-on: ubuntu-latest
 
     permissions:
@@ -23,20 +23,19 @@ jobs:
       - name: Install Poetry
         run: pip install poetry
 
-      - name: Determine new version
-        id: new_version
-        run: |
-          NEW_VERSION=$(poetry version patch --short)
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Update version and release
+      - name: Create GitHub release
+        id: release
         env:
-          NEW_VERSION: ${{ steps.new_version.outputs.NEW_VERSION }}
           GH_TOKEN: ${{ github.token }}
         run: |
+          VERSION=$(poetry version --short)
+          gh release create "v$VERSION" --target ${{ github.ref_name }} --generate-notes
+
+      - name: Bump version
+        run: |
+          NEW_VERSION=$(poetry version patch --short)
           git add pyproject.toml
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -m "Bump version to $NEW_VERSION"
           git push origin ${{ github.ref_name }}
-          gh release create "v$NEW_VERSION" --generate-notes
