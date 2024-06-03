@@ -1,11 +1,10 @@
-name: Release
+name: Pre-release
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  Release:
+  Pre-release:
     runs-on: ubuntu-latest
 
     permissions:
@@ -23,19 +22,12 @@ jobs:
       - name: Install Poetry
         run: pip install poetry
 
-      - name: Create GitHub release
-        id: release
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Bump version and create GitHub pre-release
         run: |
-          VERSION=$(poetry version --short)
-          gh release create "v$VERSION" --target ${{ github.ref_name }} --generate-notes
-
-      - name: Bump version
-        run: |
-          NEW_VERSION=$(poetry version patch --short)
+          NEW_VERSION=$(poetry version prerelease --short)
           git add pyproject.toml
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -m "Bump version to $NEW_VERSION"
           git push origin ${{ github.ref_name }}
+          gh release create "v$NEW_VERSION" --target ${{ github.ref_name }} --generate-notes --prerelease
