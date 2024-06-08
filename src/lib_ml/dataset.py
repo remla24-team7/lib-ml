@@ -6,8 +6,6 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelEncoder
 
-SEQUENCE_LENGTH = 200
-
 def load_dataset_file(path):
     with open(path, "r", encoding="utf-8") as fp:
         rows = [line.strip().split("\t") for line in fp.readlines()]
@@ -15,7 +13,7 @@ def load_dataset_file(path):
     return raw_x, raw_y
 
 
-def preprocess_dataset(dataset_dir, dest_dir):
+def preprocess_dataset(dataset_dir, outputs_dir, sequence_length):
     tokenizer = Tokenizer(lower=True, char_level=True, oov_token="-n-")
     encoder = LabelEncoder()
 
@@ -26,7 +24,7 @@ def preprocess_dataset(dataset_dir, dest_dir):
     tokenizer.fit_on_texts(raw_x_train + raw_x_val + raw_x_test)
 
     def preprocess(x):
-        return pad_sequences(tokenizer.texts_to_sequences(x), maxlen=SEQUENCE_LENGTH)
+        return pad_sequences(tokenizer.texts_to_sequences(x), maxlen=sequence_length)
 
     x_train = preprocess(raw_x_train)
     x_val = preprocess(raw_x_val)
@@ -36,17 +34,15 @@ def preprocess_dataset(dataset_dir, dest_dir):
     y_val = encoder.transform(raw_y_val)
     y_test = encoder.transform(raw_y_test)
 
-    os.makedirs(dest_dir, exist_ok=True)
+    os.makedirs(outputs_dir, exist_ok=True)
 
-    joblib.dump(x_train, Path(dest_dir) / "x_train.joblib")
-    joblib.dump(x_val, Path(dest_dir) / "x_val.joblib")
-    joblib.dump(x_test, Path(dest_dir) / "x_test.joblib")
+    joblib.dump(x_train, Path(outputs_dir) / "x_train.joblib")
+    joblib.dump(x_val, Path(outputs_dir) / "x_val.joblib")
+    joblib.dump(x_test, Path(outputs_dir) / "x_test.joblib")
 
-    joblib.dump(y_train, Path(dest_dir) / "y_train.joblib")
-    joblib.dump(y_val, Path(dest_dir) / "y_val.joblib")
-    joblib.dump(y_test, Path(dest_dir) / "y_test.joblib")
+    joblib.dump(y_train, Path(outputs_dir) / "y_train.joblib")
+    joblib.dump(y_val, Path(outputs_dir) / "y_val.joblib")
+    joblib.dump(y_test, Path(outputs_dir) / "y_test.joblib")
 
-    joblib.dump(tokenizer, Path(dest_dir) / "tokenizer.joblib")
-    joblib.dump(tokenizer.word_index, Path(dest_dir) / "char_index.joblib")
-
-    joblib.dump(encoder, Path(dest_dir) / "encoder.joblib")
+    joblib.dump(tokenizer, Path(outputs_dir) / "tokenizer.joblib")
+    joblib.dump(encoder, Path(outputs_dir) / "encoder.joblib")
