@@ -32,4 +32,4 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -m "Bump version to $NEW_VERSION"
           git push origin ${{ github.ref_name }}
-          gh release create "v$NEW_VERSION" --target ${{ github.ref_name }} --generate-notes --prerelease
+          gh release create "v$NEW_VERSION-$GITHUB_REF_NAME" --target ${{ github.ref_name }} --generate-notes --prerelease
